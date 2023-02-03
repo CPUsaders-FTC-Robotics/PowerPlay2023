@@ -1,3 +1,16 @@
+Useful links:
+
+Learning to code in java:
+https://www.w3schools.com/java/default.asp
+
+Documentation for FTC code:
+https://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
+
+Documentation for FTC lib:
+https://javadoc.io/doc/com.arcrobotics/ftclib/latest/index.html
+https://docs.ftclib.org/ftclib/
+
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
