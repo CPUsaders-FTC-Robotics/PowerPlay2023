@@ -1,4 +1,7 @@
-Useful links:
+## File path to our team code:
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode
+
+## Useful links:
 
 Learning to code in java:
 https://www.w3schools.com/java/default.asp
