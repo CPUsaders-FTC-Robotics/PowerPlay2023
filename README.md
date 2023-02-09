@@ -1,7 +1,7 @@
-File path for our robot:
-#TeamCode/src/main/java/org/firstinspires/ftc/teamcode
+#File path for our robot:
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode
 
-Useful links:
+#Useful links:
 
 Learning to code in java:
 https://www.w3schools.com/java/default.asp
