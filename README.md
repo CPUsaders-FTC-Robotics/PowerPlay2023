@@ -14,6 +14,50 @@ https://javadoc.io/doc/com.arcrobotics/ftclib/latest/index.html
 https://docs.ftclib.org/ftclib/
 
 
+## Coding basics: 
+
+Declaring (making) a variable: 
+(Type) MyVar = value
+
+Data types:
+- boolean - true or false
+- int = ...-2, -1, 0, 1, 2...
+- Long = number with decimal points
+- Double = number with less decimal points than long
+- String = “This can be any string of characters”
+- char = a single character, like ‘d’
+
+Comments:
+//This is a comment!
+
+Syntax of common statements:
+
+if (a == true && b == false) {
+…(code to run)…
+}  //if a is true AND b is false
+
+else if (b == true || c != 0) {
+…
+} //if the previous statement was false, check if b is true OR c is NOT 0
+
+else { //any other condition goes here
+…
+}
+
+
+while (c == false) {
+… (code that can make c true)…
+}
+
+
+for (int i = 0; i < 10; i++) {
+…(do something with the numbers 0-9)…
+}
+
+
+
+
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
