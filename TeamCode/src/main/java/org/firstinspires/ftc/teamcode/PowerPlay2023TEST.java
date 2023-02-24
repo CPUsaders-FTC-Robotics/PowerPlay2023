@@ -17,7 +17,7 @@ public class PowerPlay2023TEST extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "backRight");
         fl = hardwareMap.get(DcMotor.class, "frontLeft");
         fr = hardwareMap.get(DcMotor.class, "frontRight");
-        //elev = hardwareMap.get(DcMotor.class, "elevator");
+        elev = hardwareMap.get(DcMotor.class, "elevator");
         //lGrabber = hardwareMap.get(Servo.class, "leftGrabber");
         //rGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
@@ -39,28 +39,40 @@ public class PowerPlay2023TEST extends LinearOpMode {
         telemetry.addData("Data", "Testing front left motor");
         telemetry.update();
         while (opModeIsActive()) {
-            bl.setPower(1);
+
+            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+                //elevator
+                elev.setPower(-1.0 * gamepad2.left_stick_y);
+            } else {
+                elev.setPower(0);
+                elev.setPower(0);
+
+            /* Test wheels code
+            bl.setPower(0.25);
             Thread.sleep(1000);
             bl.setPower(0);
 
-            br.setPower(1);
+            br.setPower(0.25);
             Thread.sleep(1000);
             br.setPower(0);
 
-            fl.setPower(1);
+            fl.setPower(0.25);
             Thread.sleep(1000);
             fl.setPower(0);
 
-            fr.setPower(1);
+            fr.setPower(0.25);
             Thread.sleep(1000);
             fr.setPower(0);
+            */
 
-            //continue;
+
+                //continue;
+            }
         }
         //Drivetrain.interrupt();
         //Elevator.interrupt();
     }
-
+/*
     private class Drivetrain extends Thread {
 
         public void run() {
