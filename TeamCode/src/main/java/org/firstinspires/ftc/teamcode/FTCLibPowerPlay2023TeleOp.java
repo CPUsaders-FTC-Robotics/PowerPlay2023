@@ -4,12 +4,11 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-public class PowerPlay2023TeleOp extends LinearOpMode {
+public class FTCLibPowerPlay2023TeleOp extends LinearOpMode {
 
     // This variable determines whether the following program
     // uses field-centric or robot-centric driving styles. The

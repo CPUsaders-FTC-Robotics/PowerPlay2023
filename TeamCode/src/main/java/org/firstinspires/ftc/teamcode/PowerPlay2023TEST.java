@@ -22,8 +22,9 @@ public class PowerPlay2023TEST extends LinearOpMode {
         //rGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         //Create Threads
-        //Thread Drivetrain = new Drivetrain();
-        //Thread Elevator = new Elevator();
+        Thread Drivetrain = new Drivetrain();
+        Thread Elevator = new Elevator();
+        Thread Grabber = new Grabber();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -32,103 +33,137 @@ public class PowerPlay2023TEST extends LinearOpMode {
         telemetry.addData("Status", "Running");
         telemetry.update();
 
-        //Drivetrain.start();
+        Drivetrain.start();
         telemetry.addData("Data", "after drivetrain thread");
         telemetry.update();
-        //Elevator.start();
-        telemetry.addData("Data", "Testing front left motor");
+        Elevator.start();
+        telemetry.addData("Data", "after elevator thread");
         telemetry.update();
+        Grabber.start();
         while (opModeIsActive()) {
-
-            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
-                //elevator
-                elev.setPower(-1.0 * gamepad2.left_stick_y);
-            } else {
-                elev.setPower(0);
-                elev.setPower(0);
-
-            /* Test wheels code
-            bl.setPower(0.25);
-            Thread.sleep(1000);
-            bl.setPower(0);
-
-            br.setPower(0.25);
-            Thread.sleep(1000);
-            br.setPower(0);
-
-            fl.setPower(0.25);
-            Thread.sleep(1000);
-            fl.setPower(0);
-
-            fr.setPower(0.25);
-            Thread.sleep(1000);
-            fr.setPower(0);
-            */
-
-
-                //continue;
-            }
+            continue;
         }
-        //Drivetrain.interrupt();
-        //Elevator.interrupt();
+        Drivetrain.interrupt();
+        Elevator.interrupt();
+        Grabber.interrupt();
     }
-/*
+
     private class Drivetrain extends Thread {
 
         public void run() {
-            if (gamepad1.left_stick_y > 0.1 || gamepad1.left_stick_y < -0.1) {
-                //FWD&BWD
-                bl.setPower(-accel(gamepad1.left_stick_y));
-                br.setPower(accel(gamepad1.left_stick_y));
-            } else if (gamepad1.right_stick_x > 0.1 || gamepad1.right_stick_x < -0.1) {
-                bl.setPower(accel(gamepad1.right_stick_x));
-                br.setPower(accel(gamepad1.right_stick_x));
-            } else {
-                bl.setPower(0);
-                br.setPower(0);
+            while (true) {
+                if (gamepad1.left_stick_y > 0.1 || gamepad1.left_stick_y < -0.1) {
+                    //FWD&BWD
+                    fl.setPower(-accel(gamepad1.right_stick_y));
+                    fr.setPower(accel(gamepad1.right_stick_y));
+                    bl.setPower(-accel(gamepad1.left_stick_y));
+                    br.setPower(accel(gamepad1.left_stick_y));
+                } else if (gamepad1.right_stick_x > 0.1 || gamepad1.right_stick_x < -0.1) {
+                    //Turn
+                    fl.setPower(accel(gamepad1.right_stick_x));
+                    fr.setPower(accel(gamepad1.right_stick_x));
+                    bl.setPower(-accel(gamepad1.right_stick_x));
+                    br.setPower(-accel(gamepad1.right_stick_x));
+                } else if (gamepad1.left_stick_x > 0.1 || gamepad1.left_stick_x < -0.1) {
+                    //Strafe
+                    fl.setPower(accel(gamepad1.left_stick_x));
+                    fr.setPower(accel(gamepad1.left_stick_x));
+                    bl.setPower(accel(gamepad1.left_stick_x));
+                    br.setPower(accel(gamepad1.left_stick_x));
+                } else {
+                    //Stop
+                    fl.setPower(0);
+                    fr.setPower(0);
+                    bl.setPower(0);
+                    br.setPower(0);
+                }
             }
         }
+    }
 
-        private float accel(float input) {
-            assert input <= 1 || input >= -1;
-            float value = Math.abs(input);
-            if (value <= 1/3) {
+    private double accel(double input) {
+        boolean sqrInputs = true;
+
+        if (sqrInputs) {
+            //square inputs
+            if (input > 0) {
+                return Math.pow(input, 2);
+            } else {
+                return -Math.pow(input, 2);
+            }
+        } else {
+            //assert input <= 1 || input >= -1;
+
+            double value = Math.abs(input);
+            if (value <= 1 / 3) {
                 if (input == value) {
-                    return value/2;
+                    return value / 2;
                 } else {
-                    return -value/2;
+                    return -value / 2;
                 }
-            } else if (value <= 2/3) {
+            } else if (value <= 2 / 3) {
                 if (input == value) {
-                    Double val = new Double(1.1*value - 0.2);
+                    Double val = new Double(1.1 * value - 0.2);
                     return val.floatValue();
                 } else {
-                    Double val = new Double(1.1*value - 0.2);
+                    Double val = new Double(1.1 * value - 0.2);
                     return -val.floatValue();
                 }
             } else {
                 if (input == value) {
-                    Double val = new Double(0.5*value + 0.2);
+                    Double val = new Double(0.5 * value + 0.2);
                     return val.floatValue();
                 } else {
-                    Double val = new Double(0.5*value + 0.2);
+                    Double val = new Double(0.5 * value + 0.2);
                     return -val.floatValue();
                 }
             }
         }
     }
 
-    /*private class Elevator extends Thread {
+    private class Elevator extends Thread {
         public void run() {
-            if (gamepad1.a) {
-                lGrabber.setPosition(0);
-                rGrabber.setPosition(1);
-            } else {
-                lGrabber.setPosition(1);
-                rGrabber.setPosition(0);
+            while (true) {
+                if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+                    //elevator
+                    elev.setPower(-0.5 * accel(gamepad2.left_stick_y));
+                } else {
+                    elev.setPower(0);
+                    elev.setPower(0);
+                }
             }
         }
-    }*/
+    }
+
+    private class Grabber extends Thread {
+        boolean isClosed = true;
+        public void run() {
+            while (true) {
+                if (gamepad1.a) {
+                    changeState();
+                    while (gamepad1.a) {
+                        continue;
+                    }
+                }
+
+                if (gamepad1.a) {
+                    lGrabber.setPosition(0);
+                    rGrabber.setPosition(1);
+                } else {
+                    lGrabber.setPosition(1);
+                    rGrabber.setPosition(0);
+                }
+            }
+        }
+
+        private void changeState() {
+            if (isClosed) {
+                isClosed = false;
+            } else {
+                isClosed = true;
+            }
+        }
+    }
 }
 
 
