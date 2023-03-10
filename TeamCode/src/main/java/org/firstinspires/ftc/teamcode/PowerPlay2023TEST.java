@@ -121,6 +121,9 @@ public class PowerPlay2023TEST extends LinearOpMode {
         }
     }
 
+    /**
+     * Code for Elevator
+     */
     private class Elevator extends Thread {
         public void run() {
             while (true) {
@@ -135,6 +138,9 @@ public class PowerPlay2023TEST extends LinearOpMode {
         }
     }
 
+    /**
+     * Code for Grabber
+     */
     private class Grabber extends Thread {
         boolean isClosed = true;
         public void run() {
@@ -156,6 +162,9 @@ public class PowerPlay2023TEST extends LinearOpMode {
             }
         }
 
+        /**
+         * Changes the State of the grabber variable isClosed
+         */
         private void changeState() {
             if (isClosed) {
                 isClosed = false;

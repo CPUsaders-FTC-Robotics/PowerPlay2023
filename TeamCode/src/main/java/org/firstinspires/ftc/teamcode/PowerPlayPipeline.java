@@ -81,7 +81,7 @@ public class PowerPlayPipeline extends OpenCvPipeline {
          *This will extract the value of the CB channel in both rectangles
          *0 is the Y channel, 1 is the Cr, 2 is Cb
          */
-        Core.extractChannel(center_block, matCb_center, 2);
+        Core.extractChannel(center_block, matCb_center, 2); //IMPORTANT NUMBER HERE
 
         /**
          *We now average value and extract it
