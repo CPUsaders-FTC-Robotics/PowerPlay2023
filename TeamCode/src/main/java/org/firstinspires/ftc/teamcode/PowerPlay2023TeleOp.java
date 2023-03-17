@@ -5,9 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+
 @TeleOp
 
-public class PowerPlay2023TEST extends LinearOpMode {
+public class PowerPlay2023TeleOp extends LinearOpMode {
     private DcMotor bl, br, fl, fr, elev;
     private Servo lGrabber, rGrabber;
 
@@ -86,11 +89,7 @@ public class PowerPlay2023TEST extends LinearOpMode {
 
         if (sqrInputs) {
             //square inputs
-            if (input > 0) {
-                return Math.pow(input, 2);
-            } else {
-                return -Math.pow(input, 2);
-            }
+            return input/Math.abs(input) * Math.pow(input, 2);
         } else {
             //assert input <= 1 || input >= -1;
 
@@ -120,13 +119,11 @@ public class PowerPlay2023TEST extends LinearOpMode {
             }
         }
     }
+     //Code for Elevator
 
-    /**
-     * Code for Elevator
-     */
     private class Elevator extends Thread {
         public void run() {
-            while (true) {
+            while(true) {
                 if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                     //elevator
                     elev.setPower(-0.5 * accel(gamepad2.left_stick_y));

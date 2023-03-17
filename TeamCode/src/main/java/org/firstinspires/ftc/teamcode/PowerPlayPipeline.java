@@ -1,3 +1,5 @@
+//See the Class SleeveDetector (which now contiains this class)
+
 package org.firstinspires.ftc.teamcode;
 
 /**
@@ -13,6 +15,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 /**
@@ -20,15 +23,18 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * is a distinct steps to process and analyze the input(camera frames)
  */
 
-public class PowerPlayPipeline extends OpenCvPipeline {
+public class PowerPlayPipeline() extends OpenCvPipeline {
+    boolean viewportPaused;
 
     // These are the mats we need, I will be explaining them as we go
     private Mat matYCrCb = new Mat();
+    private Mat matCr_center = new Mat();
     private Mat matCb_center = new Mat();
     private Mat center_block = new Mat();
 
     //These will store the Cb values
-    public double center;
+    public double center_Cb;
+    public double center_Cr;
 
     //These will be the points for our rectangle
     int[] center_rect = {
@@ -81,17 +87,52 @@ public class PowerPlayPipeline extends OpenCvPipeline {
          *This will extract the value of the CB channel in both rectangles
          *0 is the Y channel, 1 is the Cr, 2 is Cb
          */
-        Core.extractChannel(center_block, matCb_center, 2); //IMPORTANT NUMBER HERE
+        Core.extractChannel(center_block, matCb_center, 2); //IMPORTANT NUMBER HERE for color
+        Core.extractChannel(center_block, matCr_center, 1);
 
         /**
          *We now average value and extract it
          * so now left is the Cb value of the left rectangle and
          * right is the Cb value of the right rectangle
          */
-        Scalar center_mean = Core.mean(matCb_center);
-        center = center_mean.val[0];
+        Scalar center_Cb_mean = Core.mean(matCb_center);
+        Scalar center_Cr_mean = Core.mean(matCr_center);
+        center_Cb = center_Cb_mean.val[0];
+        center_Cr = center_Cr_mean.val[0];
 
         return input;
+    }
+
+    @Override
+    /**
+     * From this:
+     * https://github.com/OpenFTC/EasyOpenCV/blob/master/examples/src/main/java/org/firstinspires/ftc/teamcode/WebcamExample.java
+     *
+     */
+    public void onViewportTapped()
+    {
+        /*
+         * The viewport (if one was specified in the constructor) can also be dynamically "paused"
+         * and "resumed". The primary use case of this is to reduce CPU, memory, and power load
+         * when you need your vision pipeline running, but do not require a live preview on the
+         * robot controller screen. For instance, this could be useful if you wish to see the live
+         * camera preview as you are initializing your robot, but you no longer require the live
+         * preview after you have finished your initialization process; pausing the viewport does
+         * not stop running your pipeline.
+         *
+         * Here we demonstrate dynamically pausing/resuming the viewport when the user taps it
+         */
+
+        viewportPaused = !viewportPaused;
+
+        if(viewportPaused)
+        {
+            webcam.pauseViewport();
+        }
+        else
+        {
+            webcam.resumeViewport();
+        }
     }
 
 

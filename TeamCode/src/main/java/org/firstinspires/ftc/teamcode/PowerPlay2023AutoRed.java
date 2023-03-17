@@ -116,8 +116,8 @@ public class PowerPlay2023AutoRed extends LinearOpMode {
             }
 
             //DOES CODE FOR Computer Vison go here?
-
-
+            PowerPlayPipeline pipeline = new PowerPlayPipeline();
+            camera.setPipeline(pipeline); //where is camera? see end of sleeveDetector
 
         }
     }
