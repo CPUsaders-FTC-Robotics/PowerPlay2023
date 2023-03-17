@@ -1,3 +1,60 @@
+##Syntax of common statements:
+
+if (a == true && b == false) {
+…(code to run)…
+}  //if a is true AND b is false
+
+else if (b == true || c != 0) {
+…
+} //if the previous statement was false, check if b is true OR c is NOT 0
+
+else { //any other condition goes here
+…
+}
+
+
+while (c == false) {
+… (code that can make c true)…
+}
+
+
+for (int i = 0; i < 10; i++) { //i++ adds one to i each time the loop is run
+…(do something with the numbers 0-9)…
+}
+
+
+##Commands related to our robot:
+Init() runs when you press button on phone 
+
+Using Motors/Servos:
+private <DcMotor/Servo> <NameVar> ;
+
+backleft = hardwareMap.get(DcMotor.class, "backLeft");
+- this uses motor import 
+
+Code for running until stop:
+public void loop() {…}
+public void are run() {...}
+
+Putting information on the phone screen:
+telemetry.addData(“DataName”, var)
+
+Put Thread.sleep(10) in a try-catch block: (to not check every millisecond)
+try {…}
+catch {InteruptedException exc) {}
+
+Grabber:
+.setPos(0-1 value)
+
+Gamepad:
+this.gamepad1.a
+this.gamepad2.left_stick_x
+
+Motors:
+.setPower(valueZeroToOne)
+
+
+
 ## TeamCode Module
 
 Welcome!
