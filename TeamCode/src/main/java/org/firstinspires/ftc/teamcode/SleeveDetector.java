@@ -48,7 +48,8 @@ public class SleeveDetector extends LinearOpMode
          * of a frame from the camera. Note that switching pipelines on-the-fly
          * (while a streaming session is in flight) *IS* supported.
          */
-        webcam.setPipeline(new PowerPlayPipeline());
+        PowerPlayPipeline pipeline = new PowerPlayPipeline(); //pipeline is our pipeline
+        webcam.setPipeline(pipeline);
 
         /*
          * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -87,6 +88,8 @@ public class SleeveDetector extends LinearOpMode
             @Override
             public void onError(int errorCode)
             {
+                telemetry.addData("Error: ", "error");
+
                 /*
                  * This will be called if the camera could not be opened
                  */
@@ -112,6 +115,10 @@ public class SleeveDetector extends LinearOpMode
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+
+            telemetry.addData("Average chrominance red:", pipeline.center_Cb );
+            telemetry.addData("Average chrominance blue", pipeline.center_Cb );
+
             telemetry.update();
 
             /*
@@ -169,55 +176,31 @@ public class SleeveDetector extends LinearOpMode
      * then you will need to account for that accordingly.
      */
 
+    /*
     class SamplePipeline extends OpenCvPipeline
     {
-        /*
-         * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
-         * highly recommended to declare them here as instance variables and re-use them for
-         * each invocation of processFrame(), rather than declaring them as new local variables
-         * each time through processFrame(). This removes the danger of causing a memory leak
-         * by forgetting to call mat.release(), and it also reduces memory pressure by not
-         * constantly allocating and freeing large chunks of memory.
-         */
-
         @Override
         public Mat processFrame(Mat input)
         {
-            /*
-             * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
-             * will only dereference to the same image for the duration of this particular
-             * invocation of this method. That is, if for some reason you'd like to save a copy
-             * of this particular frame for later use, you will need to either clone it or copy
-             * it to another Mat.
-             */
-
-            /*
-             * Draw a simple box around the middle 1/2 of the entire frame
-             */
+            //Draw a simple box around the middle 1/2 of the entire frame
             Imgproc.rectangle(
                     input,
                     new Point(
-                            input.cols()/4,
+                            input.cols()/4,             //USEFUL TEST CODE
                             input.rows()/4),
                     new Point(
                             input.cols()*(3f/4f),
                             input.rows()*(3f/4f)),
                     new Scalar(0, 255, 0), 4);
 
-            /**
-             * NOTE: to see how to get data from your pipeline to your OpMode as well as how
-             * to change which stage of the pipeline is rendered to the viewport when it is
-             * tapped, please see {@link PipelineStageSwitchingExample}
-             */
+             //NOTE: to see how to get data from your pipeline to your OpMode as well as how
+             //to change which stage of the pipeline is rendered to the viewport when it is
+             //tapped, please see {@link PipelineStageSwitchingExample}
 
             return input;
         }
-
-
     }
-
-
-
+    */
 
 
     class PowerPlayPipeline extends OpenCvPipeline {
@@ -235,39 +218,51 @@ public class SleeveDetector extends LinearOpMode
 
         //These will be the points for our rectangle
         int[] center_rect = {
-                1,
-                2,
-                3,
-                4
+                426,
+                10, //may be giving us errors right now... colRange may need to be used
+                853,
+                240
         };
 
         /**
          * This will create the rectangles
          *
          * @param frame     the input mat
-         * @param points    the points for the rectangle
-         * @param color     the color of the rectangle when it is displayed on screen
-         * @param thickness the thickness of the rectangle
+         * @param points    the points for the rectangle (array of int)
+         * @param color     the color of the rectangle when it is displayed on screen [e.g., new Scalar(0, 255, 0)]
+         * @param thickness the thickness of the rectangle (int)
          */
         public Mat drawRectangle(Mat frame, int[] points, Scalar color, int thickness) {
 
             Imgproc.rectangle(
                     frame,
                     new Point(
-                            points[0],
-                            points[1]),
+                            frame.cols()/3,             //USEFUL TEST CODE
+                            10),   //is this a problem? maybe...error from creating matrix...
+                    new Point(
+                            frame.cols()*(2f/3f),
+                            frame.rows()*(1f/3f)),
+                    color, 4);
 
+            /*
+            Imgproc.rectangle(
+                    frame,
+                    new Point(
+                            int(frame.cols() * points[0]),
+                            frame.rows() * points[1]),
                     new Point(
                             points[2],
                             points[3]),
-                    new Scalar(57,255,20), thickness);
-
-            //submat simply put is cropping the mat
-            return frame.submat(points[1], points[3], points[0], points[2]);
-
+                    color, thickness);
+            */
+            return frame.submat(points[1], points[3], points[0], points[2]); //submat simply put is cropping the mat
         }
 
+
         @Override
+        /**
+         * Gets the average red and average blue and stores them as center_Cb and center_Cr
+         */
         public Mat processFrame(Mat input) {
             /**
              *input which is in RGB is the frame the camera gives
@@ -328,18 +323,3 @@ public class SleeveDetector extends LinearOpMode
         }
     }
 }
-
-
-/*
-package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-public class SleeveDetector {
-    private String webcamName;
-
-    public void SleeveDectector(HardwareMap hMap, String webcamName) {
-        this.webcamName = webcamName;
-    }
-}
-*/
