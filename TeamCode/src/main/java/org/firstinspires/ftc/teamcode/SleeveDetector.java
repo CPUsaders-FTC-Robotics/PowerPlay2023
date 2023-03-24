@@ -20,6 +20,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.security.InvalidParameterException;
+
 @TeleOp
 public class SleeveDetector extends LinearOpMode
 {
@@ -216,12 +218,14 @@ public class SleeveDetector extends LinearOpMode
         public double center_Cb;
         public double center_Cr;
 
+
+
         //These will be the points for our rectangle
-        int[] center_rect = {
-                426,
-                10, //may be giving us errors right now... colRange may need to be used
-                853,
-                240
+        int[] center_rect = { //we tried the numbers 426, 10 or 0, 853, 240 based on our camera (trying to get bottom middle of pic)
+                1,
+                2,  //may be giving us errors right now... colRange may need to be used
+                2,  //maybe the error is that we are trying to display an empty frame...
+                1
         };
 
         /**
@@ -234,6 +238,8 @@ public class SleeveDetector extends LinearOpMode
          */
         public Mat drawRectangle(Mat frame, int[] points, Scalar color, int thickness) {
 
+            if (!frame.empty()) { //maybe this will help our error?
+
             Imgproc.rectangle(
                     frame,
                     new Point(
@@ -243,7 +249,6 @@ public class SleeveDetector extends LinearOpMode
                             frame.cols()*(2f/3f),
                             frame.rows()*(1f/3f)),
                     color, 4);
-
             /*
             Imgproc.rectangle(
                     frame,
@@ -255,7 +260,11 @@ public class SleeveDetector extends LinearOpMode
                             points[3]),
                     color, thickness);
             */
-            return frame.submat(points[1], points[3], points[0], points[2]); //submat simply put is cropping the mat
+                return frame.submat(points[1], points[3], points[0], points[2]); //submat simply put is cropping the mat
+
+            } else
+                throw new InvalidParameterException("No frame!"); //trying to solve error?
+
         }
 
 

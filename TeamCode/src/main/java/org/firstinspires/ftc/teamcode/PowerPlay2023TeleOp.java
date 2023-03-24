@@ -21,8 +21,8 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
         fl = hardwareMap.get(DcMotor.class, "frontLeft");
         fr = hardwareMap.get(DcMotor.class, "frontRight");
         elev = hardwareMap.get(DcMotor.class, "elevator");
-        //lGrabber = hardwareMap.get(Servo.class, "leftGrabber");
-        //rGrabber = hardwareMap.get(Servo.class, "rightGrabber");
+        lGrabber = hardwareMap.get(Servo.class, "leftGrabber");
+        rGrabber = hardwareMap.get(Servo.class, "rightGrabber");
 
         //Create Threads
         Thread Drivetrain = new Drivetrain();
@@ -37,11 +37,7 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
         telemetry.update();
 
         Drivetrain.start();
-        telemetry.addData("Data", "after drivetrain thread");
-        telemetry.update();
         Elevator.start();
-        telemetry.addData("Data", "after elevator thread");
-        telemetry.update();
         Grabber.start();
         while (opModeIsActive()) {
             continue;
@@ -52,27 +48,27 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
     }
 
     private class Drivetrain extends Thread {
-
+        double speedCtrl = 0.6;
         public void run() {
             while (true) {
                 if (gamepad1.left_stick_y > 0.1 || gamepad1.left_stick_y < -0.1) {
                     //FWD&BWD
-                    fl.setPower(-accel(gamepad1.right_stick_y));
-                    fr.setPower(accel(gamepad1.right_stick_y));
-                    bl.setPower(-accel(gamepad1.left_stick_y));
-                    br.setPower(accel(gamepad1.left_stick_y));
+                    fl.setPower(-speedCtrl * accel(gamepad1.right_stick_y));
+                    fr.setPower(speedCtrl * accel(gamepad1.right_stick_y));
+                    bl.setPower(-speedCtrl * accel(gamepad1.left_stick_y));
+                    br.setPower(speedCtrl * accel(gamepad1.left_stick_y));
                 } else if (gamepad1.right_stick_x > 0.1 || gamepad1.right_stick_x < -0.1) {
                     //Turn
-                    fl.setPower(accel(gamepad1.right_stick_x));
-                    fr.setPower(accel(gamepad1.right_stick_x));
-                    bl.setPower(-accel(gamepad1.right_stick_x));
-                    br.setPower(-accel(gamepad1.right_stick_x));
+                    fl.setPower(speedCtrl * accel(gamepad1.right_stick_x));
+                    fr.setPower(speedCtrl * accel(gamepad1.right_stick_x));
+                    bl.setPower(speedCtrl * accel(gamepad1.right_stick_x));
+                    br.setPower(speedCtrl * accel(gamepad1.right_stick_x));
                 } else if (gamepad1.left_stick_x > 0.1 || gamepad1.left_stick_x < -0.1) {
                     //Strafe
-                    fl.setPower(accel(gamepad1.left_stick_x));
-                    fr.setPower(accel(gamepad1.left_stick_x));
-                    bl.setPower(accel(gamepad1.left_stick_x));
-                    br.setPower(accel(gamepad1.left_stick_x));
+                    fl.setPower(speedCtrl * accel(gamepad1.left_stick_x));
+                    fr.setPower(speedCtrl * accel(gamepad1.left_stick_x));
+                    bl.setPower(-speedCtrl * accel(gamepad1.left_stick_x));
+                    br.setPower(-speedCtrl * accel(gamepad1.left_stick_x));
                 } else {
                     //Stop
                     fl.setPower(0);
@@ -119,14 +115,16 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
             }
         }
     }
-     //Code for Elevator
 
+    /**
+     * Code for Elevator
+     */
     private class Elevator extends Thread {
         public void run() {
             while(true) {
                 if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                     //elevator
-                    elev.setPower(-0.5 * accel(gamepad2.left_stick_y));
+                    elev.setPower(0.4 * accel(gamepad2.left_stick_y));
                 } else {
                     elev.setPower(0);
                     elev.setPower(0);
@@ -141,20 +139,13 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
     private class Grabber extends Thread {
         boolean isClosed = true;
         public void run() {
+            close();
             while (true) {
-                if (gamepad1.a) {
+                if (gamepad2.a || gamepad2.b) {
                     changeState();
-                    while (gamepad1.a) {
+                    while (gamepad2.a || gamepad2.b) {
                         continue;
                     }
-                }
-
-                if (gamepad1.a) {
-                    lGrabber.setPosition(0);
-                    rGrabber.setPosition(1);
-                } else {
-                    lGrabber.setPosition(1);
-                    rGrabber.setPosition(0);
                 }
             }
         }
@@ -164,10 +155,24 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
          */
         private void changeState() {
             if (isClosed) {
+                open();
                 isClosed = false;
             } else {
+                close();
                 isClosed = true;
             }
+        }
+
+        /**
+         * Code for opening/closing Grabber
+         */
+        private void close() {
+            lGrabber.setPosition(0.3);  //default 0
+            rGrabber.setPosition(0.7);  //default 1
+        }
+        private void open() {
+            lGrabber.setPosition(0.7);  //default 1
+            rGrabber.setPosition(0.3);  //default 0
         }
     }
 }
