@@ -114,8 +114,8 @@ public class SleeveDetector extends LinearOpMode
             telemetry.addData("Frame Count", webcam.getFrameCount());
             telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
             telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
+            //telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
+            //telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
 
             telemetry.addData("Average chrominance red:", pipeline.center_Cb );
@@ -221,11 +221,17 @@ public class SleeveDetector extends LinearOpMode
 
 
         //These will be the points for our rectangle
-        int[] center_rect = { //we tried the numbers 426, 10 or 0, 853, 240 based on our camera (trying to get bottom middle of pic)
-                1,
-                2,  //may be giving us errors right now... colRange may need to be used
-                2,  //maybe the error is that we are trying to display an empty frame...
-                1
+        /*
+         * 1st point is HEIGHT (y) of BOTTOM LEFT corner,
+         * 2nd point is WIDTH (x) of BOTTOM LEFT corner
+         * 3rd point is HEIGHT (y) of TOP RIGHT corner
+         * 4th point is WIDTH (x) of TOP RIGHT corner
+         */
+        int[] center_rect = { //we tried 426, (10 or 0), 853, 240 based on our camera (trying to get bottom middle of pic)
+                0,
+                426,
+                240,
+                853
         };
 
         /**
@@ -238,13 +244,13 @@ public class SleeveDetector extends LinearOpMode
          */
         public Mat drawRectangle(Mat frame, int[] points, Scalar color, int thickness) {
 
-            if (!frame.empty()) { //maybe this will help our error?
+            if (!frame.empty()) { //check for empty frame
 
             Imgproc.rectangle(
                     frame,
                     new Point(
-                            frame.cols()/3,             //USEFUL TEST CODE
-                            10),   //is this a problem? maybe...error from creating matrix...
+                            frame.cols()/3,
+                            10),
                     new Point(
                             frame.cols()*(2f/3f),
                             frame.rows()*(1f/3f)),
@@ -260,7 +266,8 @@ public class SleeveDetector extends LinearOpMode
                             points[3]),
                     color, thickness);
             */
-                return frame.submat(points[1], points[3], points[0], points[2]); //submat simply put is cropping the mat
+                return frame;
+                        //.submat(points[1], points[3], points[0], points[2]); //submat simply put is cropping the mat
 
             } else
                 throw new InvalidParameterException("No frame!"); //trying to solve error?
@@ -292,13 +299,13 @@ public class SleeveDetector extends LinearOpMode
             Core.extractChannel(center_block, matCr_center, 1);
 
             /**
-             *We now average value and extract it
+             * We now average value and extract it
              * so now left is the Cb value of the left rectangle and
              * right is the Cb value of the right rectangle
              */
             Scalar center_Cb_mean = Core.mean(matCb_center);
             Scalar center_Cr_mean = Core.mean(matCr_center);
-            center_Cb = center_Cb_mean.val[0];
+            center_Cb = center_Cb_mean.val[0]; //originally these were both 0, but values are the same...
             center_Cr = center_Cr_mean.val[0];
 
             return input;

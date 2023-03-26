@@ -171,8 +171,8 @@ public class PowerPlay2023TeleOp extends LinearOpMode {
             rGrabber.setPosition(0.7);  //default 1
         }
         private void open() {
-            lGrabber.setPosition(0.7);  //default 1
-            rGrabber.setPosition(0.3);  //default 0
+            lGrabber.setPosition(0.3);  //default 1
+            rGrabber.setPosition(0.7);  //default 0
         }
     }
 }
