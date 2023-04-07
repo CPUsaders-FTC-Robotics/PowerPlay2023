@@ -3,57 +3,108 @@ TeamCode/src/main/java/org/firstinspires/ftc/teamcode
 
 ## Useful links:
 
-Learning to code in java:
-https://www.w3schools.com/java/default.asp
+Learning to code in java: <p>
+https://www.w3schools.com/java/default.asp 
 
-Documentation for FTC code:
+Documentation for FTC code: <p>
 https://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
 
-Documentation for FTC lib:
-https://javadoc.io/doc/com.arcrobotics/ftclib/latest/index.html
+Documentation for FTC lib: <p>
+https://javadoc.io/doc/com.arcrobotics/ftclib/latest/index.html <p>
 https://docs.ftclib.org/ftclib/
 
 
-## Coding basics: 
+# Coding basics: 
 
 Declaring (making) a variable: 
-(Type) MyVar = value
-
+```
+String MyVar = "hello";
+```
 Data types:
 - boolean - true or false
 - int = ...-2, -1, 0, 1, 2...
-- Long = number with decimal points
-- Double = number with less decimal points than long
+- Long = number with decimal points 3.453819521628937
+- Double = number with less decimal points than long 3.45819521
 - String = “This can be any string of characters”
-- char = a single character, like ‘d’
+- char = a single character, like ‘d’ in single quotes
 
-Comments:
+
+Comments: 
+```
 //This is a comment!
 
-Syntax of common statements:
+/* 
+This is a Block comment! 
+All lines in this block are comments and are ignored by the program!
+*/
+```
 
-if (a == true && b == false) {
-…(code to run)…
-}  //if a is true AND b is false
+## If, Else If, and Else conditions:
+```
+if (a == true && b == false) { //if a is true AND b is false
+	//code to run goes here
+}  
 
-else if (b == true || c != 0) {
-…
-} //if the previous statement was false, check if b is true OR c is NOT 0
+else if (b == true || c != 0) { /if the previous statement was false, check if b is true OR c is NOT 0
+	//code to run goes here
+} 
 
 else { //any other condition goes here
-…
+	//code goes here
+}
+```
+
+## Loops: 
+```
+while (c == true) { //runs until the condition here is made false 
+	//code that can make c false goes here (unless you like infinite loops!)
 }
 
-
-while (c == false) {
-… (code that can make c true)…
+for (int i = 0; i < 10; i++) { //(int i = 0) declares variable used in the loop, (i < 10) is the condition for the loop to continue, 
+							   //and (i++) adds one to i each time the loop runs
+	System.out.println(i) //code to do something with the numbers 0-9
 }
+```
 
-
-for (int i = 0; i < 10; i++) {
-…(do something with the numbers 0-9)…
+## Other Statements:
+Try Catch Block:
+```
+try {
+	//code that might give exception (an error)
 }
+catch {InteruptedException ex) { //follow exception name with a variable (ex in this case) to store error info 
+	//code to handle error
+} 
+//Thread.sleep(milliseconds) may be used to not constantly try the code 
+```
 
+Displaying Information on the phone:
+```
+telemetry.addData(“DataName: ”, variableName)
+```
+
+## Robot Commands:
+Adding a new device: (usually a motor or servo)
+```
+private DcMotor bl;
+//...then later, after starting...
+bl = hardwareMap.get(DcMotor.class, "backLeft"); //the string must match the name in the configuration file on the phone
+```
+Servos:
+```
+.setPos() //input number 0-1
+```
+
+Motors:
+```
+.setPower() //input number 0-1
+```
+
+Gamepad:
+```
+this.gamepad1.a //returns true if pressed
+this.gamepad2.left_stick_x //returns number (related to how far the stick is pushed)
+```
 
 
 
